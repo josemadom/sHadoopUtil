@@ -1,29 +1,34 @@
 <!DOCTYPE html>
-<html ng-app="films">
+<html ng-app="unexmongo">
 <head>
 	<meta charset="UTF-8" />
-	<title>Oscar a la mejor película</title>
+	<title>PFC ---- UNEX - MONGO - HADOOP</title>
+	
+	<!-- Versión compilada y comprimida del CSS de Bootstrap 
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+	 -->
+	<!-- Tema opcional 
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+	-->
 </head>
 
-<body ng-app="springmvc-angular" ng-controller="FilmsController" ng-init="getFilms()">
 
-	<div class="container" ng-show="films != null">
-		<div class="film-info-bottom" ng-repeat="film in films">
-			<h4><span> {{film.year}} - {{film.title}} - {{film.director}} </span></h4>
+<body ng-app="springmvc-angular" ng-controller="DatosController" ng-init="getDatosDia()">
+
+	<div class="container" ng-show="datos != null">
+		<div class="datos-info-bottom" ng-repeat="dato in datos">
+			<h4><span> {{dato.annoDia}} - {{dato.totalDatosDias}}</span></h4>
 		</div>
 	</div>
 	
 	<div class="form">
-		<label for="title">Título:</label>
-		<input id="title" ng-model="title" type="text" />
+		<label for="annoDia">Año y Día (2016008):</label>
+		<input id="annoDia" ng-model="annoDia" type="number" />
 		
-		<label for="year">Año:</label>
-		<input id="year" ng-model="year" type="number" />
+		<label for="datoAParsear">Dato a Parsear:</label>
+		<input id="datoAParsear" ng-model="datoAParsear" type="text" />
 		
-		<label for="director">Director:</label>
-		<input id="director" ng-model="director" type="text" />
-		
-		<button id="addBtn" class="btn" ng-click="addFilm()">Añadir película</button>
+		<button id="addBtn" class="btn" ng-click="generarCSV()">Generar CSV</button>
 	</div>
 	
 	<h4>{{msg}}</h4>
@@ -31,6 +36,9 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular-resource.js"></script>
 	<script src="./js/services.js"></script>
+	<!-- Versión compilada y comprimida del JavaScript de Bootstrap 
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+	-->
 </body>
 </html>
 

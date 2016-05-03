@@ -1,25 +1,27 @@
-var app = angular.module('films', [ "ngResource" ]);
+var app = angular.module('unexmongo', [ "ngResource" ]);
 
-app.controller('FilmsController', [ '$scope', '$http',
+app.controller('DatosController', [ '$scope', '$http',
                                      
 	function($scope, $http) {
-		$scope.getFilms = function() {
-			$http.get('/films').success(function(data) {
-				$scope.films = data;
+		$scope.getDatosDia = function() {
+			$http.get('/datos').success(function(data) {
+				$scope.datos = data;
 			});
 		}
-		$scope.addFilm = function() {
-			$http.post('/films', 
+		$scope.generarCSV = function() {
+			$scope.msg = 'Se está creando el CSV. Cuando el procesa acabe se cambiará este mensaje';
+			$http.post('/datos', 
 				{
-					title : $scope.title,
-					year : $scope.year,
-					director : $scope.director
+				    coleccion :'rscat',
+				    annoDia : $scope.annoDia,
+				    datoAParsear : $scope.datoAParsear,
+				    totalDatosDias : 0
 				}
 			).success(function(data) {
-				$scope.msg = 'Pelicula creada correctamente';
-				$scope.getFilms();
+				$scope.msg = 'CSV Creado en la siguiente ruta d:/varios/csv';
+				$scope.getDatosDia();
 			}).error(function(data) {
-				$scope.msg = 'Se ha producido un error';
+				$scope.msg = 'Se ha producido un error al crear el CSV';
 			});
 		}
 } ]);

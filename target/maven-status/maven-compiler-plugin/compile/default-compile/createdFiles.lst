@@ -1,4 +1,6 @@
-es\unex\shadoopMongo\AppController.class
-es\unex\shadoopMongo\FilmsController.class
+es\unex\shadoopMongo\DatosController.class
+es\unex\shadoopMongo\Constantes.class
+es\unex\shadoopMongo\Utils.class
 es\unex\shadoopMongo\Application.class
-es\unex\shadoopMongo\Film.class
+es\unex\shadoopMongo\MongoController.class
+es\unex\shadoopMongo\AppController.class
