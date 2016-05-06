@@ -10,7 +10,10 @@ public class Datos {
 	private String coleccion;
 	
 	@NotNull
-	private Integer annoDia;
+	private Integer annoDiaIni;
+	
+	@NotNull
+	private Integer annoDiaFin;
 	
 	@NotEmpty
 	private String datoAParsear;
@@ -22,9 +25,10 @@ public class Datos {
 		
 	}
 	
-	public Datos(String coleccion, Integer annoDia, String datoAParsear, Integer totalDatosDias) {
+	public Datos(String coleccion, Integer annoDiaIni , Integer annoDiaFin ,  String datoAParsear, Integer totalDatosDias) {
 		this.coleccion = coleccion;
-		this.annoDia = annoDia;
+		this.annoDiaIni = annoDiaIni;
+		this.annoDiaFin = annoDiaFin;		
 		this.datoAParsear = datoAParsear;
 		this.totalDatosDias = totalDatosDias;
 	}
@@ -33,9 +37,14 @@ public class Datos {
 		return coleccion;
 	}
 
-	public Integer getAnnoDia() {
-		return annoDia;
+	public Integer getAnnoDiaIni() {
+		return annoDiaIni;
 	}
+	
+	public Integer getAnnoDiaFin() {
+		return annoDiaFin;
+	}
+
 
 	public String getDatoAParsear() {
 		return datoAParsear;

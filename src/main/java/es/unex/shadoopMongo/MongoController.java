@@ -12,6 +12,7 @@ import java.util.Set;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -55,12 +56,13 @@ public class MongoController {
 	 * que se le indica 
 	 * 
 	 * @param coleccion indica la colección sobre la que vamos a realizar la consulta
-	 * @param annoDia indica el anio y día en formato juliana
+	 * @param annoDiaIni indica el anio y día en formato juliana Inicial
+	 * @param annoDiaFin indica el anio y día en formato juliana Final
 	 * @param parametroRapid indica que parametro que vamos a obtener de todos los posibles
 	 * 
 	 * @return devuelve el número de registros que se han insertado en el csv
 	 */
-	    public int generateCSVfromMongo(String coleccion, String annoDia, String parametroRapid) {
+	    public int generateCSVfromMongo(String coleccion, String annoDiaIni, String annoDiaFin, String parametroRapid) {
 	        MongoController mc = new MongoController();
 	        MongoClient mongo = mc.crearConexion();
 	        DBCursor cur = null;
@@ -70,9 +72,11 @@ public class MongoController {
 	 
 	            //Si no existe la base de datos la crea
 	            DB db = mongo.getDB(Constantes.NOMBRE_BASEDATOS);
-	    		cur = mc.selectDatos(db, coleccion, annoDia);
+	    		cur = mc.selectDatos(db, coleccion, annoDiaIni, annoDiaFin);
 	    		numRegistros = cur.count();
-	            copiarDatoCSV(cur,parametroRapid);
+	    		if (numRegistros > 0){
+	    			copiarDatoCSV(cur,parametroRapid);
+	    		}
 	        } else {
 	            System.out.println("Error: Conexión no establecida");
 	        }
@@ -189,11 +193,14 @@ public class MongoController {
 	     * @param db
 	     * @param tabla
 	     */
-	    public DBCursor selectDatos(DB db, String tabla, String fecha) {
+	    public DBCursor selectDatos(DB db, String tabla, String fechaIni, String fechaFin) {
 	        //Recoge datos de la tabla
 	        DBCollection table = db.getCollection(tabla);
 	        BasicDBObject whereQuery = new BasicDBObject();
-	        whereQuery.put("time", Integer.parseInt(fecha));
+	        Integer iFechaIni = Integer.parseInt(fechaIni);
+	        Integer iFechaFin = Integer.parseInt(fechaFin);
+	        //whereQuery.put("time", Integer.parseInt(fechaIni));
+	        whereQuery.put("time", new BasicDBObject("$gte", iFechaIni).append("$lte", iFechaFin));
 	 
 	        //Busca y muestra todos los datos de la tabla
 	        DBCursor cur = table.find(whereQuery);
@@ -331,15 +338,22 @@ public class MongoController {
 	            String nuevaLinea = System.getProperty("line.separator");
 	            StringBuffer linea = new StringBuffer();
 	            DBObject dbObj = null;
+	            String[] params = datoAImportar.split(Constantes.CSV_SEPARATOR);
 		        while (cur.hasNext()) {
-		        	//System.out.println(" - " + cur.next().get("time") + " - " + cur.next().get("loc") + " - ");
 		        	dbObj = cur.next();
+		        	//System.out.println(" - " + dbObj.get("time") + " - " + dbObj.get("loc") + " - " + datoAImportar );
+		        	//System.out.println(" - " + dbObj.get("time") + " - " + dbObj.get("loc") + " - " + dbObj.get(datoAImportar) );
+		        	
 		        	BasicDBObject location = (BasicDBObject) dbObj.get("loc");
 		        	linea.append(Double.toString((Double)((BasicDBList) (location.get("coordinates"))).get(0)));
 		        	linea.append(Constantes.CSV_SEPARATOR);
 		        	linea.append(Double.toString((Double)((BasicDBList) (location.get("coordinates"))).get(1)));
-		        	linea.append(Constantes.CSV_SEPARATOR);		        	
-		        	linea.append(Double.toString((Double)dbObj.get(datoAImportar)));
+		        	linea.append(Constantes.CSV_SEPARATOR);
+		        	linea.append( ((Integer)dbObj.get("time")).toString());
+		        	for (String param :params){
+			        	linea.append(Constantes.CSV_SEPARATOR);
+			        	linea.append(Double.toString((Double)dbObj.get(param)));
+		        	}
 		        	linea.append(nuevaLinea);
 		        	bfOutput.write(linea.toString());
 		        	//Ponemos en 0 el cursor del buffer
